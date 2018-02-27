@@ -1,4 +1,4 @@
-import os, re
+import os, re, sys
 from conans import ConanFile, tools, AutoToolsBuildEnvironment
 from glob import glob
 
@@ -19,7 +19,12 @@ class PkgConfigConan(ConanFile):
         os.unlink(tgz)
 
     def build(self):
-        dirname = glob('pkg-config-*')[0]
+        dirs = glob('pkg-config-*')
+        if not len(dirs):
+            self.output.error('Could not find pkg-config-* directory')
+            sys.exit(-1)
+        else:
+            dirname = dirs[0]
 
         autotools = AutoToolsBuildEnvironment(self, win_bash=('Windows' == self.settings.os))
 

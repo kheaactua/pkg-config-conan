@@ -1,5 +1,0 @@
-[requires]
-pkg-config/0.29.1@sztomi/testing
-
-[generators]
-virtualenv

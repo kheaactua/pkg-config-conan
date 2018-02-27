@@ -1,4 +1,4 @@
-import os
+import os, re
 from conans import ConanFile, tools, AutoToolsBuildEnvironment
 from glob import glob
 
@@ -23,10 +23,18 @@ class PkgConfigConan(ConanFile):
 
         autotools = AutoToolsBuildEnvironment(self, win_bash=('Windows' == self.settings.os))
 
+        # When installed with mingw, the configure needs a bash path.
+        def tweakPath(path):
+            if 'Windows' == self.settings.os:
+                path = re.sub(r'\\', r'/', path.lower())
+                path = re.sub(r'c:/', r'/c/', path)
+            return path
+
+
         with tools.chdir(dirname):
             args = []
             args.append('--with-internal-glib')
-            args.append(f'--prefix={self.package_folder}')
+            args.append('--prefix=%s'%tweakPath(self.package_folder))
             autotools.configure(args=args)
             autotools.make()
             autotools.make(args=['install'])

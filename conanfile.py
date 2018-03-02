@@ -1,4 +1,4 @@
-import os, re, sys
+import os, re, sys, platform
 from conans import ConanFile, tools, AutoToolsBuildEnvironment
 from glob import glob
 
@@ -10,6 +10,11 @@ class PkgConfigConan(ConanFile):
     url = 'https://github.com/kheaactua/pkg-config-conan'
     description = 'This is a tooling package for pkg-config'
     settings = 'os', 'compiler', 'build_type', 'arch'
+
+    settings = {
+        'os_build':   ['Windows', 'Linux', 'Macos'],
+        'arch_build': ['x86', 'x86_64'],
+    }
 
     def source(self):
         tarball_url = f'https://pkgconfig.freedesktop.org/releases/pkg-config-{self.version}.tar.gz'
@@ -26,11 +31,11 @@ class PkgConfigConan(ConanFile):
         else:
             dirname = dirs[0]
 
-        autotools = AutoToolsBuildEnvironment(self, win_bash=('Windows' == self.settings.os))
+        autotools = AutoToolsBuildEnvironment(self, win_bash=('Windows' == platform.system()))
 
         # When installed with mingw, the configure needs a bash path.
         def tweakPath(path):
-            if 'Windows' == self.settings.os:
+            if 'Windows' == platform.system():
                 path = re.sub(r'\\', r'/', path.lower())
                 path = re.sub(r'c:/', r'/c/', path)
             return path

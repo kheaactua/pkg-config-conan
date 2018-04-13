@@ -2,7 +2,7 @@ from io import StringIO
 from conans import ConanFile, tools, AutoToolsBuildEnvironment
 
 class PkgConfigTestConan(ConanFile):
-    requires = ('pkg-config/0.29.2@ntc/stable')
+    build_requires = ('pkg-config/0.29.2@ntc/stable')
 
     def build(self):
         pass

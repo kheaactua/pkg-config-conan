@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: future_fstrings -*-
+# -*- coding: utf-8 -*-
+
 import os, re, sys, platform
 from conans import ConanFile, tools, AutoToolsBuildEnvironment
 from glob import glob

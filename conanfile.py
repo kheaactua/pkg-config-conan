@@ -17,7 +17,7 @@ class PkgConfigConan(ConanFile):
 
     settings = {
         'os_build':   ['Windows', 'Linux', 'Macos'],
-        'arch_build': ['x86', 'x86_64'],
+        'arch_build': ['x86', 'x86_64', 'armv7'],
     }
 
     def source(self):

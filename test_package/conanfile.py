@@ -11,7 +11,7 @@ class PkgConfigTestConan(ConanFile):
         output = StringIO()
         self.run('pkg-config --version', output=output)
         ver = str(output.getvalue()).strip()
-        self.output.info(f'Installed: "{ver}"')
+        self.output.info('Installed: "%s"'%ver)
 
         assert ver == '0.29.2', 'Version mismatch'
 

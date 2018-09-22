@@ -8,12 +8,12 @@ from glob import glob
 
 
 class PkgConfigConan(ConanFile):
-    name = 'pkg-config'
-    version = '0.29.2'
-    license = 'MIT'
-    url = 'https://github.com/kheaactua/pkg-config-conan'
+    name        = 'pkg-config'
+    version     = '0.29.2'
+    license     = 'MIT'
+    url         = 'https://github.com/kheaactua/pkg-config-conan'
     description = 'This is a tooling package for pkg-config'
-    settings = 'os', 'compiler', 'build_type', 'arch'
+    settings    = 'os', 'compiler', 'build_type', 'arch'
 
     settings = {
         'os_build':   ['Windows', 'Linux', 'Macos'],
@@ -59,5 +59,19 @@ class PkgConfigConan(ConanFile):
     def package_info(self):
         self.env_info.path.append(os.path.join(self.package_folder, 'bin'))
         self.env_info.path.append(os.path.join(self.package_folder, 'share/aclocal'))
+
+        # This package results in erasing the default pkg-config, so attempt to
+        # add it back.
+        def filter_nonexistant(paths):
+            outp = []
+            for p in paths:
+                if os.path.exists(p): outp.append(p)
+            return outp
+
+        if tools.os_info.is_linux:
+            if 'x86_64' == self.settings.arch_build:
+                self.env_info.PKG_CONFIG_PATH = os.environ.get('PKG_CONFIG_PATH', filter_nonexistant(['/usr/local/lib/x86_64-linux-gnu/pkgconfig', '/usr/local/lib/pkgconfig', '/usr/local/share/pkgconfig', '/usr/lib/x86_64-linux-gnu/pkgconfig', '/usr/lib/pkgconfig', '/usr/share/pkgconfig']))
+            else:
+                self.env_info.PKG_CONFIG_PATH = os.environ.get('PKG_CONFIG_PATH', filter_nonexistant(['/usr/local/lib/i386-linux-gnu/pkgconfig', '/usr/local/lib/pkgconfig', '/usr/local/share/pkgconfig', '/usr/lib/i386-linux-gnu/pkgconfig', '/usr/lib/pkgconfig', '/usr/share/pkgconfig']))
 
 # vim: ts=4 sw=4 expandtab ffs=unix ft=python foldmethod=marker :

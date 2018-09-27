@@ -61,7 +61,8 @@ class PkgConfigConan(ConanFile):
         self.env_info.path.append(os.path.join(self.package_folder, 'share/aclocal'))
 
         # This package results in erasing the default pkg-config, so attempt to
-        # add it back.
+        # add it back.  That said, when pkg-config is used as a build
+        # requirement, it's touch up's to the environment appear to be ignored.
         def filter_nonexistant(paths):
             outp = []
             for p in paths:
